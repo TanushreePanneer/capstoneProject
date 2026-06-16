@@ -151,14 +151,14 @@ All endpoints require JWT authentication.
 ### Build Backend
 
 ```bash
-cd backend
+cd C:\Capstone\money-transfer-system\backend
 mvn clean package
 ```
 
 ### Build Frontend
 
 ```bash
-cd frontend
+cd C:\Capstone\money-transfer-system\frontend
 npm run build
 ```
 
