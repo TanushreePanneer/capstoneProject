@@ -24,6 +24,7 @@ money-transfer-system/
 ## Prerequisites
 
 Ensure you have the following installed:
+
 - **Java 17** or higher
 - **Maven 3.8+**
 - **MySQL 9.7 LTS** (or MySQL 8.x)
@@ -31,6 +32,7 @@ Ensure you have the following installed:
 - **Angular CLI** (v21.2.15+)
 
 Verify installations:
+
 ```bash
 java --version
 mvn -v
@@ -65,6 +67,7 @@ spring:
 ```
 
 **Test Users (password: `password`):**
+
 - alice - $10,000 balance
 - bob - $5,000 balance
 - charlie - $2,500 balance
@@ -76,8 +79,8 @@ spring:
 Open a Command Prompt and run:
 
 ```bash
-cd backend
-mvn spring-boot:run
+cd C:\Capstone\money-transfer-system\backend
+"C:\Program Files\maven\apache-maven-3.9.16\bin\mvn" spring-boot:run
 ```
 
 Backend will start on **http://localhost:8080**
@@ -87,7 +90,7 @@ Backend will start on **http://localhost:8080**
 Open a new Command Prompt and run:
 
 ```bash
-cd frontend
+cd C:\Capstone\money-transfer-system\frontend
 ng serve
 ```
 
@@ -117,17 +120,21 @@ All endpoints require JWT authentication.
 ## Troubleshooting
 
 ### Backend won't start - "Access denied for user 'root'"
+
 - Check your MySQL password in `application.yml`
 - Verify MySQL is running with the correct credentials
 
 ### Frontend won't start - "ng: not recognized"
+
 - Reinstall Angular CLI: `npm install -g @angular/cli`
 
 ### Can't connect to database
+
 - Ensure MySQL service is running
 - Verify database exists: `mysql -u root -p money_transfer -e "SHOW TABLES;"`
 
 ### Port already in use
+
 - Backend (8080): Change `server.port` in `application.yml`
 - Frontend (4200): Run `ng serve --port 4300`
 
@@ -142,12 +149,14 @@ All endpoints require JWT authentication.
 ## Development
 
 ### Build Backend
+
 ```bash
 cd backend
 mvn clean package
 ```
 
 ### Build Frontend
+
 ```bash
 cd frontend
 npm run build
