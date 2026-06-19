@@ -22,13 +22,16 @@ public class TransferService {
     private final AccountRepository accountRepository;
     private final TransactionLogRepository transactionLogRepository;
     private final TransactionLogService transactionLogService;
+    private final RewardService rewardService;
 
     public TransferService(AccountRepository accountRepository,
                            TransactionLogRepository transactionLogRepository,
-                           TransactionLogService transactionLogService) {
+                           TransactionLogService transactionLogService,
+                           RewardService rewardService) {
         this.accountRepository = accountRepository;
         this.transactionLogRepository = transactionLogRepository;
         this.transactionLogService = transactionLogService;
+        this.rewardService = rewardService;
     }
 
     @Transactional
@@ -95,6 +98,9 @@ public class TransferService {
             successLog.setCreatedOn(Timestamp.from(Instant.now()));
 
             transactionLogRepository.save(successLog);
+
+            // 6b) Evaluate and grant reward points to the sender, if eligible
+            rewardService.evaluateAndGrant(successLog, source, destination);
 
             // 7) Build response
             TransferResponse response = new TransferResponse();

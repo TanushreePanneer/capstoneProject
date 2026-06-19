@@ -29,3 +29,16 @@ CREATE TABLE transaction_logs (
     CONSTRAINT fk_to_account FOREIGN KEY (to_account) REFERENCES accounts(id)
 );
 
+CREATE TABLE reward_history (
+    id VARCHAR(36) PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    account_id BIGINT NOT NULL,
+    transaction_id VARCHAR(36) NOT NULL UNIQUE,
+    amount DECIMAL(18,2) NOT NULL,
+    points_earned INT NOT NULL,
+    created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_reward_user FOREIGN KEY (user_id) REFERENCES users(id),
+    CONSTRAINT fk_reward_account FOREIGN KEY (account_id) REFERENCES accounts(id),
+    CONSTRAINT fk_reward_transaction FOREIGN KEY (transaction_id) REFERENCES transaction_logs(id)
+);
+
