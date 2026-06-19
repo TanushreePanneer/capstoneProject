@@ -20,11 +20,14 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
     private final TransactionLogRepository transactionLogRepository;
+    private final com.example.moneytransfer.repository.AccountStatusAuditRepository accountStatusAuditRepository;
 
     public AccountService(AccountRepository accountRepository,
-                          TransactionLogRepository transactionLogRepository) {
+                          TransactionLogRepository transactionLogRepository,
+                          com.example.moneytransfer.repository.AccountStatusAuditRepository accountStatusAuditRepository) {
         this.accountRepository = accountRepository;
         this.transactionLogRepository = transactionLogRepository;
+        this.accountStatusAuditRepository = accountStatusAuditRepository;
     }
 
     @Transactional(readOnly = true)
@@ -33,7 +36,7 @@ public class AccountService {
                 .orElseThrow(() -> new AccountNotFoundException(id));
         
         if (!account.getUser().getUsername().equals(username)) {
-            throw new RuntimeException("Unauthorized access to account");
+            throw new com.example.moneytransfer.exception.UnauthorizedAccessException("Unauthorized access to account");
         }
         
         return toResponse(account);
@@ -52,7 +55,7 @@ public class AccountService {
                 .orElseThrow(() -> new AccountNotFoundException(id));
 
         if (!account.getUser().getUsername().equals(username)) {
-            throw new RuntimeException("Unauthorized access to account");
+            throw new com.example.moneytransfer.exception.UnauthorizedAccessException("Unauthorized access to account");
         }
         return account.getBalance();
     }
@@ -64,7 +67,7 @@ public class AccountService {
                 .orElseThrow(() -> new AccountNotFoundException(id));
 
         if (!account.getUser().getUsername().equals(username)) {
-            throw new RuntimeException("Unauthorized access to account");
+            throw new com.example.moneytransfer.exception.UnauthorizedAccessException("Unauthorized access to account");
         }
         
         List<TransactionLog> logs = transactionLogRepository.findByFromAccountIdOrToAccountId(id, id);
@@ -83,6 +86,21 @@ public class AccountService {
         return logs.stream()
                 .map(log -> toTransactionLogResponse(log, accountMap))
                 .toList();
+    }
+
+    @Transactional
+    public void updateAccountStatus(Long id, com.example.moneytransfer.domain.enums.AccountStatus newStatus, String reason, String changedBy) {
+        Account account = accountRepository.findById(id)
+                .orElseThrow(() -> new AccountNotFoundException(id));
+
+        com.example.moneytransfer.domain.enums.AccountStatus oldStatus = account.getStatus();
+        account.setStatus(newStatus);
+        accountRepository.save(account);
+
+        com.example.moneytransfer.domain.entity.AccountStatusAudit audit = new com.example.moneytransfer.domain.entity.AccountStatusAudit(
+                id, oldStatus, newStatus, reason, changedBy
+        );
+        accountStatusAuditRepository.save(audit);
     }
 
     private TransactionLogResponse toTransactionLogResponse(TransactionLog log, Map<Long, Account> accountMap) {

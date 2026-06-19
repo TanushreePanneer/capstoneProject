@@ -44,7 +44,7 @@ export class AppComponent implements OnInit {
     this.api.getAccount().subscribe({
       next: (account: any) => {
         if (account) {
-          this.username = account.accountHolderName || account.username || 'User';
+          this.username = account.holderName || account.username || 'User';
         }
       },
       error: () => {

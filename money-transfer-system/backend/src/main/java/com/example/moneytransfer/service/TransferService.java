@@ -38,24 +38,22 @@ public class TransferService {
     public TransferResponse transfer(TransferRequest request, String username) {
 
         // 1) Idempotency check (if key exists, return prior result)
-        if (request.getIdempotencyKey() != null && !request.getIdempotencyKey().isBlank()) {
-            Optional<TransactionLog> existing =
-                    transactionLogRepository.findByIdempotencyKey(request.getIdempotencyKey());
+        Optional<TransactionLog> existing =
+                transactionLogRepository.findByIdempotencyKey(request.getIdempotencyKey());
 
-            if (existing.isPresent()) {
-                TransactionLog log = existing.get();
+        if (existing.isPresent()) {
+            TransactionLog log = existing.get();
 
-                TransferResponse response = new TransferResponse();
-                response.setTransactionId(log.getId().toString());
-                response.setStatus(log.getStatus().name());
-                response.setMessage(log.getStatus() == TransactionStatus.SUCCESS
-                        ? "Transfer already completed (idempotent replay)"
-                        : "Transfer already failed (idempotent replay)");
-                response.setDebitedFrom(log.getFromAccountId());
-                response.setCreditedTo(log.getToAccountId());
-                response.setAmount(log.getAmount());
-                return response;
-            }
+            TransferResponse response = new TransferResponse();
+            response.setTransactionId(log.getId().toString());
+            response.setStatus(log.getStatus().name());
+            response.setMessage(log.getStatus() == TransactionStatus.SUCCESS
+                    ? "Transfer already completed (idempotent replay)"
+                    : "Transfer already failed (idempotent replay)");
+            response.setDebitedFrom(log.getFromAccountId());
+            response.setCreditedTo(log.getToAccountId());
+            response.setAmount(log.getAmount());
+            return response;
         }
 
         UUID txId = UUID.randomUUID();
@@ -67,7 +65,7 @@ public class TransferService {
 
             // Verify ownership
             if (!source.getUser().getUsername().equals(username)) {
-                throw new RuntimeException("Unauthorized: Source account does not belong to user");
+                throw new com.example.moneytransfer.exception.UnauthorizedAccessException("Unauthorized: Source account does not belong to user");
             }
 
             Account destination = accountRepository.findById(request.getToAccountId())
@@ -75,7 +73,7 @@ public class TransferService {
 
             // 3) Validate
             if (source.getId().equals(destination.getId())) {
-                throw new IllegalArgumentException("Source and destination accounts must be different");
+                throw new com.example.moneytransfer.exception.SelfTransferException("Source and destination accounts must be different");
             }
 
             // 4) Execute transfer

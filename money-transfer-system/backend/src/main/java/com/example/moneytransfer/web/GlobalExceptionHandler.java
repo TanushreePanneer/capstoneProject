@@ -44,5 +44,17 @@ public class GlobalExceptionHandler {
         }
         return ResponseEntity.badRequest().body(new ErrorResponse("VAL-400", ex.getMessage()));
     }
+
+    @ExceptionHandler(org.springframework.dao.OptimisticLockingFailureException.class)
+    public ResponseEntity<ErrorResponse> handleOptimisticLock(org.springframework.dao.OptimisticLockingFailureException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ErrorResponse("TRX-409", "Concurrent modification detected. Please retry."));
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleGeneral(Exception ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorResponse("SYS-500", "An unexpected error occurred."));
+    }
 }
 
