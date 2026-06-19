@@ -1,5 +1,5 @@
 <div class="app-layout">
-    <nav class="navbar">
+    <nav class="navbar" *ngIf="!isAuthPage">
         <div class="container nav-content">
             <a routerLink="/" class="nav-brand">
                 <!-- Simple Icon placeholder (SVG) -->
@@ -11,7 +11,56 @@
                 </svg>
                 <span>MoneyTransfer</span>
             </a>
-            <!-- Placeholder for future nav items or user profile -->
+
+            <div class="nav-right">
+                <!-- Consistent Nav Action Button -->
+                <a *ngIf="showNavAction" routerLink="/dashboard" class="nav-action-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                    {{ navActionLabel }}
+                </a>
+
+                <!-- Profile Dropdown -->
+                <div class="profile-wrapper" *ngIf="authService.isLoggedIn()">
+                    <button class="profile-trigger" (click)="toggleProfileDropdown($event)" id="profile-trigger-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </button>
+                    <div class="profile-dropdown" *ngIf="showProfileDropdown" (click)="$event.stopPropagation()">
+                        <div class="profile-dropdown-header">
+                            <div class="profile-avatar">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                            </div>
+                            <div class="profile-info">
+                                <span class="profile-name">{{ username || 'User' }}</span>
+                                <span class="profile-role">Account Holder</span>
+                            </div>
+                        </div>
+                        <div class="profile-dropdown-divider"></div>
+                        <button class="profile-dropdown-item logout-item" (click)="logout()" id="logout-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                <polyline points="16 17 21 12 16 7"></polyline>
+                                <line x1="21" y1="12" x2="9" y2="12"></line>
+                            </svg>
+                            Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </nav>
 

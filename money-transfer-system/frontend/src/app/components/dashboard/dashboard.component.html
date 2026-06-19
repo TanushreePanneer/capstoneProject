@@ -7,8 +7,29 @@
     <div class="dashboard-grid">
         <!-- Balance Card -->
         <div class="card balance-card">
-            <h3>Current Balance</h3>
-            <div class="balance-amount">{{ balance | currency:'USD' }}</div>
+            <div class="balance-top-row">
+                <h3>Current Balance</h3>
+                <button class="visibility-toggle" (click)="toggleBalanceVisibility()" id="balance-toggle-btn">
+                    <!-- Eye icon (visible) -->
+                    <svg *ngIf="balanceVisible" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                    <!-- Eye-off icon (hidden) -->
+                    <svg *ngIf="!balanceVisible" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path
+                            d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24">
+                        </path>
+                        <line x1="1" y1="1" x2="23" y2="23"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="balance-amount" *ngIf="balanceVisible">{{ balance | currency:'USD' }}</div>
+            <div class="balance-amount balance-hidden" *ngIf="!balanceVisible">$ •••••••</div>
         </div>
 
         <!-- Actions -->
@@ -54,9 +75,23 @@
             <p>View your transaction metrics and insights.</p>
             <button routerLink="/analytics" class="btn btn-secondary w-full">View Analytics</button>
         </div>
-    </div>
 
-    <div class="mt-4 text-center">
-        <button (click)="logout()" class="btn btn-danger">Logout</button>
+        <!-- Rewards Card -->
+        <div class="card action-card rewards-action-card">
+            <div class="icon-wrapper rewards-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon
+                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                    </polygon>
+                </svg>
+            </div>
+            <h3>Rewards</h3>
+            <p class="rewards-points-summary">
+                <span class="points-badge">{{ totalRewardPoints }} pts</span>
+                earned so far
+            </p>
+            <button routerLink="/rewards" class="btn btn-secondary w-full">View Rewards</button>
+        </div>
     </div>
 </div>

@@ -5,12 +5,26 @@
       <p>Send funds securely to another account.</p>
     </div>
 
-    <form (ngSubmit)="transfer()">
+    <!-- Success Message -->
+    <div *ngIf="successMessage" class="success-message">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+      {{ successMessage }}
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+
+    <form #transferForm="ngForm" (ngSubmit)="transfer(transferForm)">
       <div class="form-group">
         <label for="toAccount">Recipient Account ID</label>
         <div class="input-wrapper">
-          <input type="number" id="toAccount" [(ngModel)]="toAccount" name="toAccount" 
-            required />
+          <input type="number" id="toAccount" [(ngModel)]="toAccount" name="toAccount"
+            placeholder="Enter account ID" required />
         </div>
       </div>
 
@@ -23,12 +37,10 @@
       </div>
 
       <div class="form-actions mt-4">
-        <button type="submit" class="btn w-full">Send Money</button>
+        <button type="submit" class="btn w-full" [disabled]="transferForm.invalid || isSubmitting">
+          {{ isSubmitting ? 'Sending...' : 'Send Money' }}
+        </button>
       </div>
     </form>
-
-    <div class="text-center mt-4">
-      <a routerLink="/dashboard" class="btn btn-secondary">Cancel / Back to Dashboard</a>
-    </div>
   </div>
 </div>

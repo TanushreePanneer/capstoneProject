@@ -6,6 +6,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { TransferComponent } from './components/transfer/transfer.component';
 import { HistoryComponent } from './components/history/history.component';
 import { AnalyticsComponent } from './components/analytics/analytics.component';
+import { RewardsComponent } from './components/rewards/rewards.component';
 import { authGuard } from './guards/auth.guard';
 
 // Directly export routes for standalone usage
@@ -16,6 +17,7 @@ export const routes: Routes = [
   { path: 'transfer', component: TransferComponent, canActivate: [authGuard] },
   { path: 'history', component: HistoryComponent, canActivate: [authGuard] },
   { path: 'analytics', component: AnalyticsComponent, canActivate: [authGuard] },
+  { path: 'rewards', component: RewardsComponent, canActivate: [authGuard] },
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: '**', redirectTo: '/dashboard' }
 ];

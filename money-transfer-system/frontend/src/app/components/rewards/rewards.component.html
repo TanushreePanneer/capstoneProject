@@ -1,0 +1,84 @@
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header mb-4">
+      <h2>Rewards</h2>
+      <p>Track your reward points earned from successful transfers.</p>
+    </div>
+
+    <!-- Total Points KPI -->
+    <div class="rewards-summary-card">
+      <div class="rewards-summary-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon
+            points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+          </polygon>
+        </svg>
+      </div>
+      <div class="rewards-summary-content">
+        <p class="rewards-summary-label">Total Reward Points</p>
+        <h3 class="rewards-summary-value">{{ totalPoints }} <span class="pts-label">pts</span></h3>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-state">
+      <p>Loading rewards...</p>
+    </div>
+
+    <!-- Rewards History Table -->
+    <div *ngIf="!isLoading && rewardHistory.length > 0" class="rewards-history-section">
+      <h3 class="section-title">Rewards History</h3>
+      <div class="table-responsive">
+        <table class="rewards-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Transaction ID</th>
+              <th>Amount</th>
+              <th>Points Earned</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let reward of rewardHistory">
+              <td>{{ reward.createdOn | date:'dd MMM yyyy, hh:mm a' }}</td>
+              <td>
+                <span class="txn-id-badge">{{ getShortTransactionId(reward.transactionId) }}</span>
+              </td>
+              <td class="font-bold">{{ reward.amount | currency:'USD' }}</td>
+              <td>
+                <span class="points-earned-badge">+{{ reward.pointsEarned }} pts</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading && rewardHistory.length === 0" class="empty-state">
+      <div class="empty-state-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <polygon
+            points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+          </polygon>
+        </svg>
+      </div>
+      <h3>No rewards earned yet</h3>
+      <p>Start making transfers over $100 to earn reward points!</p>
+      <button routerLink="/transfer" class="btn">Make a Transfer</button>
+    </div>
+
+    <!-- Rewards Info -->
+    <div class="rewards-info-card" *ngIf="!isLoading">
+      <h4>How Rewards Work</h4>
+      <ul class="rewards-rules">
+        <li>Earn <strong>1 point for every $100</strong> transferred</li>
+        <li>Transfer must be <strong>successful</strong> and over <strong>$100</strong></li>
+        <li>Self-transfers do not earn rewards</li>
+        <li>Points are rounded down (e.g., $250 = 2 pts)</li>
+      </ul>
+    </div>
+  </div>
+</div>

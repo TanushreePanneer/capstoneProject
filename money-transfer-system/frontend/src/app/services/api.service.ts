@@ -51,4 +51,13 @@ export class ApiService {
       })
     );
   }
+
+  // Reward API endpoints
+  getRewardSummary(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/rewards/summary`);
+  }
+
+  getRewardHistory(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/rewards/history`);
+  }
 }

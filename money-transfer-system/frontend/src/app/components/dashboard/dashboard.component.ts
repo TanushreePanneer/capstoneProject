@@ -13,17 +13,28 @@ import { Router, RouterModule } from '@angular/router';
 })
 export class DashboardComponent implements OnInit {
   balance: number = 0;
+  balanceVisible: boolean = true;
+  totalRewardPoints: number = 0;
 
-  constructor(private api: ApiService, private authService: AuthService, private router: Router) { }
+  constructor(private api: ApiService, private authService: AuthService, private router: Router) {}
 
   ngOnInit() {
     this.api.getBalance().subscribe((data: any) => {
       this.balance = data.balance;
     });
+
+    // Load reward summary
+    this.api.getRewardSummary().subscribe({
+      next: (data: any) => {
+        this.totalRewardPoints = data.totalPoints || 0;
+      },
+      error: () => {
+        this.totalRewardPoints = 0;
+      }
+    });
   }
 
-  logout() {
-    this.authService.logout();
-    this.router.navigate(['/login']);
+  toggleBalanceVisibility() {
+    this.balanceVisible = !this.balanceVisible;
   }
 }
